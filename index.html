@@ -226,7 +226,7 @@
         </a>
         <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9LZW5pY2hpJTIwMi5qc29u/"
             class="card">
-            <img class="cover-img" src="https://cdn.imgchest.com/files/c17391c55d61.png" alt="Kenichi Cover">
+            <img class="cover-img" src="https://cdn.imgchest.com/files/ff0b993c3003.png" alt="Kenichi Cover">
             <h2>History's Strongest Disciple Kenichi 2: Masters Arc </h2>
             <div class="meta">
                 <div><strong>Author:</strong> Syun Matsuena</div>
@@ -235,22 +235,21 @@
             <div class="tags">
                 <span class="tag">Martial Arts</span>
                 <span class="tag">Comedy</span>
-                <span class="tag">Ecchi</span>
+                <span class="tag">Shounen</span>
             </div>
             <button class="read-btn">Read Series</button>
         </a>
-                <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9Ub2tpd2ElMjBLaXRhcmVyaS5qc29u/"
-            class="card">
-            <img class="cover-img" src="https://cdn.imgchest.com/files/78fc1ac189f5.png" alt="Tokiwa Cover">
-            <h2>Tokiwa Kitareri!! </h2>
+<a class="card">
+            <img id="baki-oneshots-cover" class="cover-img" src="https://cdn.imgchest.com/files/placeholder.jpg" alt="Baki Gaiden One-Shots">
+            <h2>Baki Gaiden: One-Shots</h2>
             <div class="meta">
-                <div><strong>Author:</strong> Syun Matsuena</div>
-                <div><strong>Artist:</strong> Syun Matsuena</div>
+                <div><strong>Author:</strong> Itagaki Keisuke</div>
+                <div><strong>Artist:</strong> Various</div>
             </div>
             <div class="tags">
                 <span class="tag">Action</span>
-                <span class="tag">Comedy</span>
-                <span class="tag">Ecchi</span>
+                <span class="tag">Anthology</span>
+                <span class="tag">Martial Arts</span>
             </div>
             <button class="read-btn">Read Series</button>
         </a>
@@ -311,6 +310,23 @@
     </footer>
 
     <script>
+
+
+    const bakiCovers = [
+        "https://cdn.imgchest.com/files/82b863c637f2.jpg",   // Gaia 1
+        "https://cdn.imgchest.com/files/9936d9292fe3.jpg",  // Gaia 2
+        "https://cdn.imgchest.com/files/7a9ad50c0e20.jpg",   // Retsu
+        "https://cdn.imgchest.com/files/1d56d8df18c6.jpg"   // Hanayama
+    ];
+
+    const bakiTargetImage = document.getElementById('baki-oneshots-cover');
+
+    if (bakiTargetImage) {
+        const randomBakiIndex = Math.floor(Math.random() * bakiCovers.length);
+        bakiTargetImage.src = bakiCovers[randomBakiIndex];
+    }
+
+        
         document.addEventListener("DOMContentLoaded", () => {
             const cards = document.querySelectorAll('.card');
             cards.forEach((card, index) => {
