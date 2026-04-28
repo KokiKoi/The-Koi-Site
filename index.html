@@ -326,6 +326,7 @@
             <button class="read-btn">Upcoming Rerelease</button>
         </a>
     </div>
+    
     <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
 <script>
   kofiWidgetOverlay.draw('kokikoi20', {
@@ -339,6 +340,306 @@
         Join my community: <a href="https://discord.gg/zbCFAFGMMq" target="_blank" class="footer-link">Discord</a>
     </footer>
 
+    <div id="kp-side-widget" class="kp-widget-wrapper">
+    
+    <button id="kp-trigger" class="kp-trigger">
+        <div class="kp-icon-wrapper">
+            <img src="https://cdn.imgchest.com/files/9a5937423a57.jpg" alt="MangaDot" class="kp-icon">
+        </div>
+        <span class="kp-trigger-text">Check out Mangadot!</span>
+        <div class="kp-trigger-glow"></div>
+    </button>
+
+    <div id="kp-panel" class="kp-panel">
+        
+        <button id="kp-close" class="kp-close">&times;</button>
+
+        <div class="kp-header">
+            <img src="https://cdn.imgchest.com/files/9a5937423a57.jpg" alt="MangaDot" class="kp-header-logo">
+            <h3 class="kp-title">Mangadot</h3>
+        </div>
+        
+        <div class="kp-content">
+            <div class="kp-card kp-highlight-card">
+                <p class="kp-desc">
+                    Hey! If you want to read my latest chapters as soon as they drop, MangaDot is the place to be. I post all my chapters there personally the second they drop!
+                    <br><br>
+                    Feel free to check out the site!
+                </p>
+                
+                <a href="https://mangadot.net/group/17473" target="_blank" class="kp-btn kp-btn-gradient">
+                    <span>Check out Mangadot</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        /* Matching the Koi Pond theme */
+        --kp-bg-base: rgba(30, 30, 38, 0.85); 
+        --kp-bg-hover: rgba(35, 35, 45, 0.95);
+        --kp-border: rgba(255, 255, 255, 0.15);
+        --kp-text-main: #e0e0e0;
+        --kp-text-muted: #9a9aab;
+        
+        /* The Void Purple Colors */
+        --kp-accent-purple: #7e57c2;
+        --kp-accent-glow: rgba(126, 87, 194, 0.4);
+        --kp-accent-dark: #311b5e;
+    }
+
+    .kp-widget-wrapper {
+        position: fixed;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        z-index: 99999;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        box-sizing: border-box;
+    }
+
+    .kp-widget-wrapper * {
+        box-sizing: border-box;
+    }
+
+    /* --- THE BIGGER TRIGGER PILL --- */
+    .kp-trigger {
+        position: absolute;
+        right: -15px; /* Tucked slightly to hide the flat edge */
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--kp-bg-base);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid var(--kp-border);
+        border-right: none;
+        border-radius: 35px 0 0 35px;
+        display: flex;
+        align-items: center;
+        padding: 8px 25px 8px 12px;
+        height: 56px; 
+        width: 250px; 
+        cursor: pointer;
+        box-shadow: -4px 0 15px rgba(0, 0, 0, 0.5), inset 0 0 15px var(--kp-accent-glow);
+        /* Swapped bouncy bezier for a smooth ease-out */
+        transition: right 0.3s ease-out, background 0.3s ease, border-color 0.3s ease;
+        overflow: hidden;
+    }
+
+    .kp-trigger:hover {
+        right: 0; /* Pulls exactly to the edge, no overshoot */
+        background: var(--kp-bg-hover);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .kp-trigger-glow {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        border-radius: 35px 0 0 35px;
+        box-shadow: inset 2px 0 10px rgba(126, 87, 194, 0.3);
+        pointer-events: none;
+        animation: kp-breathe 3s infinite alternate;
+    }
+
+    .kp-icon-wrapper {
+        width: 34px; 
+        height: 34px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2;
+        /* Smoothed out the float to be more subtle */
+        animation: kp-float-icon 4s ease-in-out infinite;
+    }
+
+    .kp-icon {
+        width: 100%;
+        height: 100%;
+        border-radius: 8px; 
+        object-fit: contain; 
+        background-color: transparent;
+    }
+
+    .kp-trigger-text {
+        color: var(--kp-text-main);
+        font-weight: bold;
+        font-size: 15.5px; 
+        margin-left: 12px;
+        letter-spacing: 0.5px;
+        z-index: 2;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
+
+    /* --- THE WIDER PANEL --- */
+    .kp-panel {
+        position: absolute;
+        right: -500px; 
+        top: 50%;
+        transform: translateY(-50%);
+        width: 420px; 
+        background: var(--kp-bg-base);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--kp-border);
+        border-right: none;
+        border-radius: 16px 0 0 16px;
+        padding: 30px; 
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
+        transition: right 0.4s ease-out; /* Smooth panel slide */
+    }
+
+    .kp-widget-wrapper.is-open .kp-panel {
+        right: 0;
+    }
+
+    .kp-widget-wrapper.is-open .kp-trigger {
+        right: -350px; 
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* --- PANEL CONTENT --- */
+    .kp-header {
+        display: flex;
+        justify-content: flex-start; 
+        align-items: center;
+        gap: 15px; 
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .kp-header-logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        object-fit: contain;
+    }
+
+    .kp-title {
+        color: #ffffff;
+        margin: 0;
+        font-size: 1.4rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); 
+    }
+
+    .kp-close {
+        position: absolute;
+        top: 20px;
+        right: 20px; 
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--kp-border);
+        color: var(--kp-text-muted);
+        width: 36px; 
+        height: 36px;
+        border-radius: 8px;
+        font-size: 24px; 
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+
+    .kp-close:hover {
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+    }
+
+    .kp-card {
+        padding: 25px; 
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background-color: rgba(25, 25, 32, 0.6);
+        text-align: center; 
+    }
+
+    .kp-highlight-card {
+        border-color: rgba(126, 87, 194, 0.4);
+        box-shadow: inset 0 0 20px rgba(126, 87, 194, 0.1);
+    }
+
+    .kp-desc {
+        color: var(--kp-text-main);
+        font-size: 1rem; 
+        line-height: 1.6;
+        margin: 0 0 25px 0;
+    }
+
+    /* --- GRADIENT CTA BUTTON --- */
+    .kp-btn-gradient {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 14px 0; 
+        border-radius: 8px;
+        text-decoration: none;
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: linear-gradient(90deg, #2a2a35, var(--kp-accent-dark), #2a2a35);
+        background-size: 200% auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        animation: kp-shimmer 3s linear infinite;
+    }
+
+    .kp-btn-gradient:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 6px 15px rgba(126, 87, 194, 0.4);
+    }
+
+    /* --- KEYFRAME ANIMATIONS --- */
+    @keyframes kp-breathe {
+        0% { box-shadow: inset 2px 0 5px rgba(126, 87, 194, 0.1); }
+        100% { box-shadow: inset 4px 0 15px rgba(126, 87, 194, 0.4); }
+    }
+
+    @keyframes kp-float-icon {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-2px); } /* Reduced the vertical jump */
+    }
+
+    @keyframes kp-shimmer {
+        to { background-position: 200% center; }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const wrapper = document.getElementById('kp-side-widget');
+        const triggerBtn = document.getElementById('kp-trigger');
+        const closeBtn = document.getElementById('kp-close');
+        const panel = document.getElementById('kp-panel');
+
+        // Open the panel
+        triggerBtn.addEventListener('click', (e) => {
+            wrapper.classList.add('is-open');
+            e.stopPropagation();
+        });
+
+        // Close the panel
+        closeBtn.addEventListener('click', () => {
+            wrapper.classList.remove('is-open');
+        });
+
+        // Click outside to close
+        document.addEventListener('click', (e) => {
+            if (wrapper.classList.contains('is-open') && !panel.contains(e.target)) {
+                wrapper.classList.remove('is-open');
+            }
+        });
+    });
+</script>
     <script>
 
 
