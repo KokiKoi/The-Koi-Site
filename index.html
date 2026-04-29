@@ -340,11 +340,11 @@
         Join my community: <a href="https://discord.gg/zbCFAFGMMq" target="_blank" class="footer-link">Discord</a>
     </footer>
 
-    <div id="kp-side-widget" class="kp-widget-wrapper">
+<div id="kp-side-widget" class="kp-widget-wrapper">
     
     <button id="kp-trigger" class="kp-trigger">
         <div class="kp-icon-wrapper">
-            <img src="https://cdn.imgchest.com/files/9a5937423a57.jpg" alt="MangaDot" class="kp-icon">
+            <img src="https://storage.ko-fi.com/cdn/logomarkLogo.png" alt="MangaDot" class="kp-icon">
         </div>
         <span class="kp-trigger-text">Check out Mangadot!</span>
         <div class="kp-trigger-glow"></div>
@@ -355,16 +355,16 @@
         <button id="kp-close" class="kp-close">&times;</button>
 
         <div class="kp-header">
-            <img src="https://cdn.imgchest.com/files/9a5937423a57.jpg" alt="MangaDot" class="kp-header-logo">
+            <img src="https://storage.ko-fi.com/cdn/logomarkLogo.png" alt="MangaDot" class="kp-header-logo">
             <h3 class="kp-title">Mangadot</h3>
         </div>
         
         <div class="kp-content">
             <div class="kp-card kp-highlight-card">
                 <p class="kp-desc">
-                    Hey! If you want to read my latest chapters as soon as they drop, MangaDot is the place to be. I post all my chapters there personally the second they drop!
+                    Hey! If you want to read my latest chapters as soon as they drop, MangaDot is the place to be. I post all my new updates here first in high quality.
                     <br><br>
-                    Feel free to check out the site!
+                    Come hang out and check out the new stuff! :)
                 </p>
                 
                 <a href="https://mangadot.net/group/17473" target="_blank" class="kp-btn kp-btn-gradient">
@@ -404,10 +404,10 @@
         box-sizing: border-box;
     }
 
-    /* --- THE BIGGER TRIGGER PILL --- */
+    /* --- THE TRIGGER PILL --- */
     .kp-trigger {
         position: absolute;
-        right: -15px; /* Tucked slightly to hide the flat edge */
+        right: -15px; 
         top: 50%;
         transform: translateY(-50%);
         background: var(--kp-bg-base);
@@ -420,16 +420,15 @@
         align-items: center;
         padding: 8px 25px 8px 12px;
         height: 56px; 
-        width: 250px; 
+        width: 275px; /* Widened to fit the uppercase, spaced-out text */
         cursor: pointer;
         box-shadow: -4px 0 15px rgba(0, 0, 0, 0.5), inset 0 0 15px var(--kp-accent-glow);
-        /* Swapped bouncy bezier for a smooth ease-out */
         transition: right 0.3s ease-out, background 0.3s ease, border-color 0.3s ease;
         overflow: hidden;
     }
 
     .kp-trigger:hover {
-        right: 0; /* Pulls exactly to the edge, no overshoot */
+        right: 0; 
         background: var(--kp-bg-hover);
         border-color: rgba(255, 255, 255, 0.3);
     }
@@ -450,7 +449,6 @@
         justify-content: center;
         align-items: center;
         z-index: 2;
-        /* Smoothed out the float to be more subtle */
         animation: kp-float-icon 4s ease-in-out infinite;
     }
 
@@ -462,13 +460,16 @@
         background-color: transparent;
     }
 
+    /* MATCING THE TITLE TYPOGRAPHY */
     .kp-trigger-text {
-        color: var(--kp-text-main);
-        font-size: 15.5px; 
-        margin-left: 12px;
-        letter-spacing: 0.5px;
+        color: #ffffff; /* Bright white instead of muted main text */
+        font-weight: bold;
+        font-size: 14px; 
+        margin-left: 14px;
+        text-transform: uppercase; /* Matched to title */
+        letter-spacing: 2px; /* Matched to title */
         z-index: 2;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Matched to title */
     }
 
     /* --- THE WIDER PANEL --- */
@@ -486,7 +487,7 @@
         border-radius: 16px 0 0 16px;
         padding: 30px; 
         box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
-        transition: right 0.4s ease-out; /* Smooth panel slide */
+        transition: right 0.4s ease-out; 
     }
 
     .kp-widget-wrapper.is-open .kp-panel {
@@ -605,7 +606,7 @@
 
     @keyframes kp-float-icon {
         0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-2px); } /* Reduced the vertical jump */
+        50% { transform: translateY(-2px); } 
     }
 
     @keyframes kp-shimmer {
