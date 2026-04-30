@@ -5,13 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Koi Pond.</title>
-      <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
         :root {
             --bg-color: #0b0b0e;
             --card-bg: rgba(30, 30, 38, 0.85);
             --text-main: #e0e0e0;
             --text-muted: #9a9aab;
+            --accent-purple: #7e57c2;
+            --accent-dark: #311b5e;
         }
 
         body {
@@ -45,23 +47,209 @@
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
 
+        /* --- LAYOUT STYLES --- */
+        .layout-wrapper {
+            display: flex;
+            width: 100%;
+            max-width: 1480px; 
+            gap: 3.5rem; 
+            align-items: flex-start;
+            justify-content: center; 
+        }
+
+        .main-content {
+            flex: 1;
+            max-width: 1080px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-            gap: 1.2rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
             width: 100%;
-            max-width: 850px;
             flex-grow: 1;
         }
 
+        /* --- SIDEBAR & CUSTOM WIDGET --- */
+        .sidebar {
+            width: 320px; 
+            flex-shrink: 0;
+            position: sticky;
+            top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .custom-widget-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Glassy Donate Button */
+        .kofi-toggle-btn {
+            width: 100%;
+            background-color: rgba(30, 30, 38, 0.65); 
+            backdrop-filter: blur(8px);
+            color: #ffffff;
+            padding: 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.25); 
+            border-radius: 12px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .kofi-toggle-btn:hover {
+            background-color: rgba(126, 87, 194, 0.2); 
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 6px 20px rgba(126, 87, 194, 0.3);
+        }
+
+        .kofi-toggle-btn.open {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom-color: transparent;
+            background-color: rgba(126, 87, 194, 0.15);
+        }
+
+        .kofi-icon-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .kofi-toggle-btn.open .toggle-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* The expanding container for the actual Ko-fi panel */
+        .kofi-panel-wrapper {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.4s ease;
+            background-color: #f9f9f9; 
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            border: 1px solid transparent;
+            border-top: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .kofi-panel-wrapper.open {
+            max-height: 650px; 
+            opacity: 1;
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        #kofi-iframe {
+            width: 100%;
+            height: 650px;
+            border: none;
+            display: block;
+        }
+
+        /* --- WALL OF KOI --- */
+        .wall-of-koi {
+            padding: 1.2rem;
+        }
+
+        .wall-of-koi h2 {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+        }
+
+        .supporter-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .supporter-list::-webkit-scrollbar { width: 4px; }
+        .supporter-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+
+        .supporter-list li {
+            padding: 1rem 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+        .supporter-list li:last-child { border-bottom: none; }
+
+        .supporter-name { 
+            font-weight: bold; 
+            color: #ffffff; 
+            display: block; 
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+        }
+        
+        .supporter-msg { 
+            font-style: italic; 
+            color: #e0e0e0;
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .supporter-action {
+            line-height: 1.5;
+        }
+
+        /* The new white and purple glowing effect applied to the whole action line */
+        .highlight-amount {
+            color: #ffffff;
+            font-weight: bold;
+            text-shadow: 0 0 6px var(--accent-purple), 0 0 12px var(--accent-purple);
+        }
+
+        .supporter-reply {
+            margin-top: 8px;
+            padding-left: 10px;
+            border-left: 2px solid var(--accent-purple);
+            color: #bca0eb; 
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 1100px) {
+            .layout-wrapper { flex-direction: column; align-items: center; justify-content: center; }
+            .sidebar { width: 100%; max-width: 500px; position: static; margin-top: 2rem;}
+        }
+
+        /* --- EXISTING CARD STYLES --- */
         .card {
             background-color: var(--card-bg);
             backdrop-filter: blur(4px);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
-            text-decoration: none;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
             color: var(--text-main);
             display: flex;
             flex-direction: column;
@@ -72,102 +260,41 @@
         .card:hover {
             transform: translateY(-6px);
             border-color: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             background-color: rgba(35, 35, 45, 0.95);
-        }
-
-        .card h2 {
-            font-size: 1rem;
-            margin: 0 0 0.5rem 0;
-            color: #ffffff;
-            text-align: center;
         }
 
         .cover-img {
             width: 100%;
-            height: 240px;
+            aspect-ratio: 2 / 3;
             object-fit: cover;
-            border-radius: 6px;
-            margin-bottom: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 0.9rem;
             background-color: #1f1f26;
+            display: block;
         }
 
-        .meta {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 0.6rem;
-            line-height: 1.4;
-            text-align: left;
-        }
-
-        .meta strong {
-            color: #cfcfcf;
-        }
-
-        .tags {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .tag {
-            background-color: rgba(255, 255, 255, 0.08);
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            color: #c0c0c0;
-        }
-
+        .card h2 { font-size: 1.05rem; margin: 0 0 0.6rem 0; color: #ffffff; text-align: center; line-height: 1.3; }
+        .meta { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.7rem; line-height: 1.4; text-align: left; }
+        .meta strong { color: #cfcfcf; }
+        .tags { display: flex; gap: 5px; margin-bottom: 1rem; flex-wrap: wrap; justify-content: center; }
+        .tag { background-color: rgba(255, 255, 255, 0.08); padding: 3px 7px; border-radius: 4px; font-size: 0.7rem; color: #c0c0c0; }
+        .card-actions { display: flex; flex-direction: column; gap: 0.5rem; margin-top: auto; }
         .read-btn {
-            background: #2a2a35;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            margin-top: auto;
+            background: #2a2a35; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.15); padding: 9px 12px;
+            border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+            text-transform: uppercase; font-size: 0.78rem; letter-spacing: 0.5px; text-align: center; text-decoration: none; display: block;
         }
-
-        .card:hover .read-btn {
-            background: #383846;
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .fade-in {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .read-btn:hover { background: #383846; border-color: rgba(255, 255, 255, 0.3); }
+        .read-btn-disabled { background: #1f1f26; color: var(--text-muted); border-color: rgba(255, 255, 255, 0.05); cursor: default; }
+        .fade-in { opacity: 1; transform: translateY(0); }
 
         footer {
-            margin-top: 3rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%;
-            max-width: 500px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--text-muted);
+            margin-top: 3rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1); width: 100%;
+            max-width: 500px; text-align: center; font-size: 0.9rem; color: var(--text-muted); align-self: center;
         }
-
-        .footer-link {
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.3s;
-            margin-left: 5px;
-            border-bottom: 1px solid transparent;
-        }
-
-        .footer-link:hover {
-            color: #cccccc;
-            border-bottom: 1px solid #cccccc;
-        }
+        .footer-link { color: #ffffff; text-decoration: none; font-weight: bold; transition: 0.3s; margin-left: 5px; border-bottom: 1px solid transparent; }
+        .footer-link:hover { color: #cccccc; border-bottom: 1px solid #cccccc; }
     </style>
 </head>
 
@@ -175,491 +302,274 @@
 
     <canvas id="bg-canvas"></canvas>
 
-    <h1>The Koi Pond</h1>
-
-    <div class="grid" id="manga-grid">
-        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9TaWxlbnQlMjBIaWxsJTIwRi5qc29u/"
-            class="card">
-            <img class="cover-img" src="https://cdn.imgchest.com/files/ec06e5c50fc9.jpg" alt="OPM Cover">
-            <h2>SILENT HILL f</h2>
-            <div class="meta">
-                <div><strong>Author:</strong>Konami Digital Entertainment, Ryukishi07</div>
-                <div><strong>Artist:</strong>Ame Goukin</div>
-            </div>
-            <div class="tags">
-                <span class="tag">Horror</span>
-                <span class="tag">Psychological</span>
-                <span class="tag">Drama</span>
-            </div>
-            <button class="read-btn">Read Series</button>
-        </a>
-        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9PbmVQdW5jaE1hbi1NYW5nYS5qc29u/"
-            class="card">
-            <img class="cover-img" src="https://cdn.imgchest.com/files/8810826942e4.jpg" alt="OPM Cover">
-            <h2>One Punch-Man Manga</h2>
-            <div class="meta">
-                <div><strong>Author:</strong> ONE</div>
-                <div><strong>Artist:</strong> Murata Yuusuke</div>
-            </div>
-            <div class="tags">
-                <span class="tag">Action</span>
-                <span class="tag">Comedy</span>
-                <span class="tag">Superhero</span>
-            </div>
-            <button class="read-btn">Read Series</button>
-        </a>
-        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9HYWlhJTI2U2lrb3Jza3kuanNvbg/"
-            class="card">
-            <img class="cover-img" src="https://cdn.imgchest.com/files/a1d3519c2447.jpg" alt="Volume 10 Cover">
-            <h2>Baki Side Story: Gaia & Sikorsky - Sometimes Nomura—Two yet Three People Living Together</h2>
-            <div class="meta">
-                <div><strong>Author:</strong> Itagaki Keisuke</div>
-                <div><strong>Artist:</strong> Toshiaki Hayashi</div>
-            </div>
-            <div class="tags">
-                <span class="tag">Action</span>
-                <span class="tag">Comedy</span>
-                <span class="tag">Slice of Life</span>
-            </div>
-            <button class="read-btn">Read Series</button>
-        </a>
-        </a>
-                <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9Ub2tpd2ElMjBLaXRhcmVyaS5qc29u/"
-            class="card">
-            <img class="cover-img" src="https://cdn.imgchest.com/files/78fc1ac189f5.png" alt="Tokiwa Cover">
-            <h2>Tokiwa Kitareri!! </h2>
-            <div class="meta">
-                <div><strong>Author:</strong> Syun Matsuena</div>
-                <div><strong>Artist:</strong> Syun Matsuena</div>
-            </div>
-            <div class="tags">
-                <span class="tag">Martial Arts</span>
-                <span class="tag">Comedy</span>
-                <span class="tag">Shounen</span>
-            </div>
-            <button class="read-btn">Read Series</button>
-        </a>
-        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9LZW5pY2hpJTIwMi5qc29u/"
-            class="card">
-            <img class="cover-img" src="https://cdn.imgchest.com/files/ff0b993c3003.png" alt="Kenichi Cover">
-            <h2>History's Strongest Disciple Kenichi 2: Masters Arc </h2>
-            <div class="meta">
-                <div><strong>Author:</strong> Syun Matsuena</div>
-                <div><strong>Artist:</strong> Syun Matsuena</div>
-            </div>
-            <div class="tags">
-                <span class="tag">Martial Arts</span>
-                <span class="tag">Comedy</span>
-                <span class="tag">Shounen</span>
-            </div>
-            <button class="read-btn">Read Series</button>
-        </a>
-        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9PbmVQdW5jaE1hbi1XZWJDb21pYy5qc29u/"
-            class="card">
-            <img class="cover-img" src="https://cdn.imgchest.com/files/5cc96c06cce6.jpg" alt="OPM Cover">
-            <h2>One Punch-Man (Webcomic)</h2>
-            <div class="meta">
-                <div><strong>Author:</strong> ONE</div>
-                <div><strong>Artist:</strong> ONE</div>
-            </div>
-            <div class="tags">
-                <span class="tag">Action</span>
-                <span class="tag">Comedy</span>
-                <span class="tag">Superhero</span>
-            </div>
-            <button class="read-btn">Read Series</button>
-        </a>
-<a class="card">
-            <img id="baki-oneshots-cover" class="cover-img" src="https://cdn.imgchest.com/files/placeholder.jpg" alt="Baki Gaiden One-Shots">
-            <h2>Baki Gaiden: One-Shots</h2>
-            <div class="meta">
-                <div><strong>Author:</strong> Itagaki Keisuke</div>
-                <div><strong>Artist:</strong> Various</div>
-            </div>
-            <div class="tags">
-                <span class="tag">Action</span>
-                <span class="tag">Anthology</span>
-                <span class="tag">Martial Arts</span>
-            </div>
-            <button class="read-btn">Upcoming Series</button>
-        </a>
-        <a class="card">
-            <img class="cover-img" src="https://cdn.imgchest.com/files/751abffc7182.png" alt="Muhai no Futari">
-            <h2>Muhai no Futari -<br>The Unbeatable Duo</h2>
-            <div class="meta">
-                <div><strong>Author:</strong> Endou Hiroki</div>
-                <div><strong>Artist:</strong> Endou Hiroki</div>
-            </div>
-            <div class="tags">
-                <span class="tag">Action</span>
-                <span class="tag">Drama</span>
-                <span class="tag">Sports</span>
-            </div>
-            <button class="read-btn">Upcoming Series</button>
-        </a>
-        <a class="card">
-            <img class="cover-img" src="https://cdn.imgchest.com/files/4a4b1e6ea5be.jpg" alt="Kizuzura">
-            <h2>Baki Gaiden -<br>Kizuzura</h2>
-            <div class="meta">
-                <div><strong>Author:</strong> Itagaki Keisuke</div>
-                <div><strong>Artist:</strong> Yamauchi Yukinao</div>
-            </div>
-            <div class="tags">
-                <span class="tag">Action</span>
-                <span class="tag">School Life</span>
-                <span class="tag">Comedy</span>
-            </div>
-            <button class="read-btn">Upcoming Rerelease</button>
-        </a>
-        <a class="card">
-            <img class="cover-img" src="https://cdn.imgchest.com/files/1da036337f5f.png" alt="Antonio vs Mount Toba">
-            <h2>Grappler Baki Gaiden -<br>Antonio Igari vs Mount Toba</h2>
-            <div class="meta">
-                <div><strong>Author:</strong> Itagaki Keisuke</div>
-                <div><strong>Artist:</strong> Itagaki Keisuke</div>
-            </div>
-            <div class="tags">
-                <span class="tag">Action</span>
-                <span class="tag">Drama</span>
-                <span class="tag">Sports</span>
-            </div>
-            <button class="read-btn">Upcoming Rerelease</button>
-        </a>
-    </div>
-    
-    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
-<script>
-  kofiWidgetOverlay.draw('kokikoi20', {
-    'type': 'floating-chat',
-    'floating-chat.donateButton.text': 'Support me',
-    'floating-chat.donateButton.background-color': '#323842',
-    'floating-chat.donateButton.text-color': '#fff'
-  });
-</script>
-    <footer>
-        Join my community: <a href="https://discord.gg/zbCFAFGMMq" target="_blank" class="footer-link">Discord</a>
-    </footer>
-
-<div id="kp-side-widget" class="kp-widget-wrapper">
-    
-    <button id="kp-trigger" class="kp-trigger">
-        <div class="kp-icon-wrapper">
-            <img src="https://cdn.imgchest.com/files/9a5937423a57.jpg" alt="MangaDot" class="kp-icon">
-        </div>
-        <span class="kp-trigger-text">Check out Mangadot!</span>
-        <div class="kp-trigger-glow"></div>
-    </button>
-
-    <div id="kp-panel" class="kp-panel">
+    <div class="layout-wrapper">
         
-        <button id="kp-close" class="kp-close">&times;</button>
+        <!-- LEFT SIDE: Main Manga Content -->
+        <div class="main-content">
+            <h1>The Koi Pond</h1>
+            
+            <div class="grid" id="manga-grid">
+                <!-- SILENT HILL f -->
+                <div class="card">
+                    <img class="cover-img" src="https://cdn.imgchest.com/files/ec06e5c50fc9.jpg" alt="Silent Hill f Cover">
+                    <h2>SILENT HILL f</h2>
+                    <div class="meta">
+                        <div><strong>Author:</strong> Konami Digital Entertainment, Ryukishi07</div>
+                        <div><strong>Artist:</strong> Ame Goukin</div>
+                    </div>
+                    <div class="tags"><span class="tag">Horror</span><span class="tag">Psychological</span><span class="tag">Drama</span></div>
+                    <div class="card-actions">
+                        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9TaWxlbnQlMjBIaWxsJTIwRi5qc29u/" class="read-btn">Read Series</a>
+                        <a href="https://mangadot.net/manga/24505" class="read-btn">Read on Mangadot.net</a>
+                    </div>
+                </div>
 
-        <div class="kp-header">
-            <img src="https://cdn.imgchest.com/files/9a5937423a57.jpg" alt="MangaDot" class="kp-header-logo">
-            <h3 class="kp-title">Mangadot</h3>
+                <!-- One Punch-Man Manga -->
+                <div class="card">
+                    <img class="cover-img" src="https://cdn.imgchest.com/files/8810826942e4.jpg" alt="OPM Manga Cover">
+                    <h2>One Punch-Man Manga</h2>
+                    <div class="meta">
+                        <div><strong>Author:</strong> ONE</div>
+                        <div><strong>Artist:</strong> Murata Yuusuke</div>
+                    </div>
+                    <div class="tags"><span class="tag">Action</span><span class="tag">Comedy</span><span class="tag">Superhero</span></div>
+                    <div class="card-actions">
+                        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9PbmVQdW5jaE1hbi1NYW5nYS5qc29u/" class="read-btn">Read Series</a>
+                        <a href="https://mangadot.net/manga/852" class="read-btn">Read on Mangadot.net</a>
+                    </div>
+                </div>
+
+                <!-- Gaia & Sikorsky -->
+                <div class="card">
+                    <img class="cover-img" src="https://cdn.imgchest.com/files/a1d3519c2447.jpg" alt="Gaia & Sikorsky Cover">
+                    <h2>Baki Side Story: Gaia &amp; Sikorsky - Sometimes Nomura—Two yet Three People Living Together</h2>
+                    <div class="meta">
+                        <div><strong>Author:</strong> Itagaki Keisuke</div>
+                        <div><strong>Artist:</strong> Toshiaki Hayashi</div>
+                    </div>
+                    <div class="tags"><span class="tag">Action</span><span class="tag">Comedy</span><span class="tag">Slice of Life</span></div>
+                    <div class="card-actions">
+                        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9HYWlhJTI2U2lrb3Jza3kuanNvbg/" class="read-btn">Read Series</a>
+                        <a href="https://mangadot.net/manga/16062" class="read-btn">Read on Mangadot.net</a>
+                    </div>
+                </div>
+
+                <!-- Tokiwa Kitareri -->
+                <div class="card">
+                    <img class="cover-img" src="https://cdn.imgchest.com/files/78fc1ac189f5.png" alt="Tokiwa Cover">
+                    <h2>Tokiwa Kitareri!!</h2>
+                    <div class="meta">
+                        <div><strong>Author:</strong> Syun Matsuena</div>
+                        <div><strong>Artist:</strong> Syun Matsuena</div>
+                    </div>
+                    <div class="tags"><span class="tag">Martial Arts</span><span class="tag">Comedy</span><span class="tag">Shounen</span></div>
+                    <div class="card-actions">
+                        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9Ub2tpd2ElMjBLaXRhcmVyaS5qc29u/" class="read-btn">Read Series</a>
+                        <a href="https://mangadot.net/manga/7107" class="read-btn">Read on Mangadot.net</a>
+                    </div>
+                </div>
+
+                <!-- Kenichi -->
+                <div class="card">
+                    <img class="cover-img" src="https://cdn.imgchest.com/files/ff0b993c3003.png" alt="Kenichi Cover">
+                    <h2>History's Strongest Disciple Kenichi 2: Masters Arc</h2>
+                    <div class="meta">
+                        <div><strong>Author:</strong> Syun Matsuena</div>
+                        <div><strong>Artist:</strong> Syun Matsuena</div>
+                    </div>
+                    <div class="tags"><span class="tag">Martial Arts</span><span class="tag">Comedy</span><span class="tag">Shounen</span></div>
+                    <div class="card-actions">
+                        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9LZW5pY2hpJTIwMi5qc29u/" class="read-btn">Read Series</a>
+                        <a href="https://mangadot.net/manga/21642" class="read-btn">Read on Mangadot.net</a>
+                    </div>
+                </div>
+
+                <!-- OPM Webcomic -->
+                <div class="card">
+                    <img class="cover-img" src="https://cdn.imgchest.com/files/5cc96c06cce6.jpg" alt="OPM Webcomic Cover">
+                    <h2>One Punch-Man (Webcomic)</h2>
+                    <div class="meta">
+                        <div><strong>Author:</strong> ONE</div>
+                        <div><strong>Artist:</strong> ONE</div>
+                    </div>
+                    <div class="tags"><span class="tag">Action</span><span class="tag">Comedy</span><span class="tag">Superhero</span></div>
+                    <div class="card-actions">
+                        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9PbmVQdW5jaE1hbi1XZWJDb21pYy5qc29u/" class="read-btn">Read Series</a>
+                        <a href="https://mangadot.net/manga/1487" class="read-btn">Read on Mangadot.net</a>
+                    </div>
+                </div>
+
+                <!-- Baki Gaiden One-Shots -->
+                <div class="card">
+                    <img id="baki-oneshots-cover" class="cover-img" src="https://cdn.imgchest.com/files/placeholder.jpg" alt="Baki Gaiden One-Shots">
+                    <h2>Baki Gaiden: One-Shots</h2>
+                    <div class="meta">
+                        <div><strong>Author:</strong> Itagaki Keisuke</div>
+                        <div><strong>Artist:</strong> Various</div>
+                    </div>
+                    <div class="tags"><span class="tag">Action</span><span class="tag">Anthology</span><span class="tag">Martial Arts</span></div>
+                    <div class="card-actions"><span class="read-btn read-btn-disabled">Upcoming Series</span></div>
+                </div>
+
+                <!-- Muhai no Futari -->
+                <div class="card">
+                    <img class="cover-img" src="https://cdn.imgchest.com/files/751abffc7182.png" alt="Muhai no Futari">
+                    <h2>Muhai no Futari -<br>The Unbeatable Duo</h2>
+                    <div class="meta">
+                        <div><strong>Author:</strong> Endou Hiroki</div>
+                        <div><strong>Artist:</strong> Endou Hiroki</div>
+                    </div>
+                    <div class="tags"><span class="tag">Action</span><span class="tag">Drama</span><span class="tag">Sports</span></div>
+                    <div class="card-actions"><span class="read-btn read-btn-disabled">Upcoming Series</span></div>
+                </div>
+
+                <!-- Kizuzura -->
+                <div class="card">
+                    <img class="cover-img" src="https://cdn.imgchest.com/files/4a4b1e6ea5be.jpg" alt="Kizuzura Cover">
+                    <h2>Baki Gaiden -<br>Kizuzura</h2>
+                    <div class="meta">
+                        <div><strong>Author:</strong> Itagaki Keisuke</div>
+                        <div><strong>Artist:</strong> Yamauchi Yukinao</div>
+                    </div>
+                    <div class="tags"><span class="tag">Action</span><span class="tag">School Life</span><span class="tag">Comedy</span></div>
+                    <div class="card-actions"><span class="read-btn read-btn-disabled">Upcoming Rerelease</span></div>
+                </div>
+
+                <!-- Antonio Igari -->
+                <div class="card">
+                    <img class="cover-img" src="https://cdn.imgchest.com/files/1da036337f5f.png" alt="Antonio vs Mount Toba Cover">
+                    <h2>Grappler Baki Gaiden -<br>Antonio Igari vs Mount Toba</h2>
+                    <div class="meta">
+                        <div><strong>Author:</strong> Itagaki Keisuke</div>
+                        <div><strong>Artist:</strong> Itagaki Keisuke</div>
+                    </div>
+                    <div class="tags"><span class="tag">Action</span><span class="tag">Drama</span><span class="tag">Sports</span></div>
+                    <div class="card-actions"><span class="read-btn read-btn-disabled">Upcoming Rerelease</span></div>
+                </div>
+            </div>
+
+            <footer>
+                Join my community: <a href="https://discord.gg/zbCFAFGMMq" target="_blank" class="footer-link">Discord</a>
+            </footer>
         </div>
-        
-        <div class="kp-content">
-            <div class="kp-card kp-highlight-card">
-                <p class="kp-desc">
-                    Hey! If you want to read my latest chapters as soon as they drop, MangaDot is the place to be. I post all my new chapters there personally.
-                    <br><br>
-                    Come hang out and check out the new stuff! :)
-                </p>
+
+        <!-- RIGHT SIDE: Sidebar -->
+        <aside class="sidebar">
+            
+            <!-- Custom Expanding Glassy Ko-fi Widget -->
+            <div class="custom-widget-container">
+                <button class="kofi-toggle-btn" id="kofi-toggle" onclick="toggleWidget()">
+                    <div class="kofi-icon-group">
+                        <span>☕</span> Support the Pond
+                    </div>
+                    <span class="toggle-arrow">▼</span>
+                </button>
                 
-                <a href="https://mangadot.net/group/17473" target="_blank" class="kp-btn kp-btn-gradient">
-                    <span>Check out Mangadot</span>
-                </a>
+                <!-- The panel that slides out -->
+                <div class="kofi-panel-wrapper" id="kofi-panel">
+                    <iframe id="kofi-iframe" src="https://ko-fi.com/kokikoi20/?hidefeed=true&widget=true&embed=true&preview=true" title="kokikoi20"></iframe>
+                </div>
             </div>
-        </div>
+
+            <!-- The Wall of Koi Container -->
+            <div class="card wall-of-koi" style="opacity: 1; transform: none;"> 
+                <h2>Wall of Koi</h2>
+                <div class="meta" style="margin-bottom: 15px;">Recent supporters!</div>
+                
+                <ul class="supporter-list" id="dynamic-donations"></ul>
+            </div>
+        </aside>
+
     </div>
-</div>
 
-<style>
-    :root {
-        /* Matching the Koi Pond theme */
-        --kp-bg-base: rgba(30, 30, 38, 0.85); 
-        --kp-bg-hover: rgba(35, 35, 45, 0.95);
-        --kp-border: rgba(255, 255, 255, 0.15);
-        --kp-text-main: #e0e0e0;
-        --kp-text-muted: #9a9aab;
-        
-        /* The Void Purple Colors */
-        --kp-accent-purple: #7e57c2;
-        --kp-accent-glow: rgba(126, 87, 194, 0.4);
-        --kp-accent-dark: #311b5e;
-    }
-
-    .kp-widget-wrapper {
-        position: fixed;
-        top: 50%;
-        right: 0;
-        transform: translateY(-50%);
-        z-index: 99999;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-        box-sizing: border-box;
-    }
-
-    .kp-widget-wrapper * {
-        box-sizing: border-box;
-    }
-
-    /* --- THE TRIGGER PILL --- */
-    .kp-trigger {
-        position: absolute;
-        right: -15px; 
-        top: 50%;
-        transform: translateY(-50%);
-        background: var(--kp-bg-base);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border: 1px solid var(--kp-border);
-        border-right: none;
-        border-radius: 35px 0 0 35px;
-        display: flex;
-        align-items: center;
-        padding: 8px 25px 8px 12px;
-        height: 56px; 
-        width: 275px; /* Widened to fit the uppercase, spaced-out text */
-        cursor: pointer;
-        box-shadow: -4px 0 15px rgba(0, 0, 0, 0.5), inset 0 0 15px var(--kp-accent-glow);
-        transition: right 0.3s ease-out, background 0.3s ease, border-color 0.3s ease;
-        overflow: hidden;
-    }
-
-    .kp-trigger:hover {
-        right: 0; 
-        background: var(--kp-bg-hover);
-        border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    .kp-trigger-glow {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        border-radius: 35px 0 0 35px;
-        box-shadow: inset 2px 0 10px rgba(126, 87, 194, 0.3);
-        pointer-events: none;
-        animation: kp-breathe 3s infinite alternate;
-    }
-
-    .kp-icon-wrapper {
-        width: 34px; 
-        height: 34px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 2;
-        animation: kp-float-icon 4s ease-in-out infinite;
-    }
-
-    .kp-icon {
-        width: 100%;
-        height: 100%;
-        border-radius: 8px; 
-        object-fit: contain; 
-        background-color: transparent;
-    }
-
-    /* MATCING THE TITLE TYPOGRAPHY */
-    .kp-trigger-text {
-        color: #ffffff; /* Bright white instead of muted main text */
-        font-weight: bold;
-        font-size: 14px; 
-        margin-left: 14px;
-        text-transform: uppercase; /* Matched to title */
-        letter-spacing: 2px; /* Matched to title */
-        z-index: 2;
-        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Matched to title */
-    }
-
-    /* --- THE WIDER PANEL --- */
-    .kp-panel {
-        position: absolute;
-        right: -500px; 
-        top: 50%;
-        transform: translateY(-50%);
-        width: 420px; 
-        background: var(--kp-bg-base);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid var(--kp-border);
-        border-right: none;
-        border-radius: 16px 0 0 16px;
-        padding: 30px; 
-        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
-        transition: right 0.4s ease-out; 
-    }
-
-    .kp-widget-wrapper.is-open .kp-panel {
-        right: 0;
-    }
-
-    .kp-widget-wrapper.is-open .kp-trigger {
-        right: -350px; 
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    /* --- PANEL CONTENT --- */
-    .kp-header {
-        display: flex;
-        justify-content: flex-start; 
-        align-items: center;
-        gap: 15px; 
-        margin-bottom: 25px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .kp-header-logo {
-        width: 38px;
-        height: 38px;
-        border-radius: 8px;
-        object-fit: contain;
-    }
-
-    .kp-title {
-        color: #ffffff;
-        margin: 0;
-        font-size: 1.4rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); 
-    }
-
-    .kp-close {
-        position: absolute;
-        top: 20px;
-        right: 20px; 
-        background: rgba(255,255,255,0.05);
-        border: 1px solid var(--kp-border);
-        color: var(--kp-text-muted);
-        width: 36px; 
-        height: 36px;
-        border-radius: 8px;
-        font-size: 24px; 
-        line-height: 1;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: all 0.2s ease;
-    }
-
-    .kp-close:hover {
-        background: rgba(255,255,255,0.1);
-        color: #fff;
-    }
-
-    .kp-card {
-        padding: 25px; 
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background-color: rgba(25, 25, 32, 0.6);
-        text-align: center; 
-    }
-
-    .kp-highlight-card {
-        border-color: rgba(126, 87, 194, 0.4);
-        box-shadow: inset 0 0 20px rgba(126, 87, 194, 0.1);
-    }
-
-    .kp-desc {
-        color: var(--kp-text-main);
-        font-size: 1rem; 
-        line-height: 1.6;
-        margin: 0 0 25px 0;
-    }
-
-    /* --- GRADIENT CTA BUTTON --- */
-    .kp-btn-gradient {
-        display: block;
-        width: 100%;
-        text-align: center;
-        padding: 14px 0; 
-        border-radius: 8px;
-        text-decoration: none;
-        color: #ffffff;
-        font-weight: bold;
-        font-size: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        background: linear-gradient(90deg, #2a2a35, var(--kp-accent-dark), #2a2a35);
-        background-size: 200% auto;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-        animation: kp-shimmer 3s linear infinite;
-    }
-
-    .kp-btn-gradient:hover {
-        transform: translateY(-2px);
-        border-color: rgba(255, 255, 255, 0.3);
-        box-shadow: 0 6px 15px rgba(126, 87, 194, 0.4);
-    }
-
-    /* --- KEYFRAME ANIMATIONS --- */
-    @keyframes kp-breathe {
-        0% { box-shadow: inset 2px 0 5px rgba(126, 87, 194, 0.1); }
-        100% { box-shadow: inset 4px 0 15px rgba(126, 87, 194, 0.4); }
-    }
-
-    @keyframes kp-float-icon {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-2px); } 
-    }
-
-    @keyframes kp-shimmer {
-        to { background-position: 200% center; }
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const wrapper = document.getElementById('kp-side-widget');
-        const triggerBtn = document.getElementById('kp-trigger');
-        const closeBtn = document.getElementById('kp-close');
-        const panel = document.getElementById('kp-panel');
-
-        // Open the panel
-        triggerBtn.addEventListener('click', (e) => {
-            wrapper.classList.add('is-open');
-            e.stopPropagation();
-        });
-
-        // Close the panel
-        closeBtn.addEventListener('click', () => {
-            wrapper.classList.remove('is-open');
-        });
-
-        // Click outside to close
-        document.addEventListener('click', (e) => {
-            if (wrapper.classList.contains('is-open') && !panel.contains(e.target)) {
-                wrapper.classList.remove('is-open');
-            }
-        });
-    });
-</script>
     <script>
+        // =========================================================
+        // ✨ WIDGET TOGGLE LOGIC ✨
+        // =========================================================
+        function toggleWidget() {
+            const panel = document.getElementById('kofi-panel');
+            const btn = document.getElementById('kofi-toggle');
+            
+            if (panel.classList.contains('open')) {
+                panel.classList.remove('open');
+                btn.classList.remove('open');
+            } else {
+                panel.classList.add('open');
+                btn.classList.add('open');
+            }
+        }
 
 
-    const bakiCovers = [
-        "https://cdn.imgchest.com/files/82b863c637f2.jpg",   // Gaia 1
-        "https://cdn.imgchest.com/files/9936d9292fe3.jpg",  // Gaia 2
-        "https://cdn.imgchest.com/files/7a9ad50c0e20.jpg",   // Retsu
-        "https://cdn.imgchest.com/files/1d56d8df18c6.jpg"   // Hanayama
-    ];
-
-    const bakiTargetImage = document.getElementById('baki-oneshots-cover');
-
-    if (bakiTargetImage) {
-        const randomBakiIndex = Math.floor(Math.random() * bakiCovers.length);
-        bakiTargetImage.src = bakiCovers[randomBakiIndex];
+const recentDonations = [
+    {
+        name: "Kana K",
+        message: "I just found u today and thank you so for your effort on the Baki Gaiden Gaia and Sikorsky manga 🙇🏻‍♀️💕",
+        monstersFunded: 6,
+        amount: "$6.00",
+        reply: "Thank you sm <3, Happy to provide Gaia & Sikorsky :D!"
+    },
+    {
+        name: "Anonymous",
+        message: "Thanks for the scans",
+        monstersFunded: 3,
+        amount: "$3.00",
+        reply: "Omg thank you sm <3 Happy to help!"
+    },
+    {
+        name: "Jose",
+        message: "Preciate the kenichi, mah boi",
+        monstersFunded: 10,
+        amount: "$10.00",
+        reply: "OMG THANK YOU!! <3"
+    },
+    {
+        name: "Jokuman357",
+        message: "I wait upon you on the top of the Dragon Gate.",
+        monstersFunded: 20,
+        amount: "$20.00",
+        reply: "Actually shocked holy crap thank you <3"
     }
+];
 
-        
+        const donationContainer = document.getElementById('dynamic-donations');
+        recentDonations.forEach(donor => {
+            let li = document.createElement('li');
+            
+            // Format the message if it exists
+            let msgHTML = donor.message ? `<div class="supporter-msg">"${donor.message}"</div>` : '';
+            
+            // Format the reply if it exists
+            let replyHTML = donor.reply ? `<div class="supporter-reply">↳ <strong>Reply:</strong> ${donor.reply}</div>` : '';
+
+            // Apply the glowing highlight-amount class to the entire action div
+            li.innerHTML = `
+                <span class="supporter-name">${donor.name}</span>
+                ${msgHTML}
+                <div class="supporter-action highlight-amount">
+                    Funded ${donor.monstersFunded} Monsters! - ${donor.amount}
+                </div>
+                ${replyHTML}
+            `;
+            
+            donationContainer.appendChild(li);
+        });
+        // =========================================================
+
+        const bakiCovers = [
+            "https://cdn.imgchest.com/files/82b863c637f2.jpg",
+            "https://cdn.imgchest.com/files/9936d9292fe3.jpg",
+            "https://cdn.imgchest.com/files/7a9ad50c0e20.jpg",
+            "https://cdn.imgchest.com/files/1d56d8df18c6.jpg"
+        ];
+
+        const bakiTargetImage = document.getElementById('baki-oneshots-cover');
+        if (bakiTargetImage) {
+            const randomBakiIndex = Math.floor(Math.random() * bakiCovers.length);
+            bakiTargetImage.src = bakiCovers[randomBakiIndex];
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
-            const cards = document.querySelectorAll('.card');
+            const cards = document.querySelectorAll('.card:not([style*="opacity: 1"])');
             cards.forEach((card, index) => {
                 setTimeout(() => {
                     card.classList.add('fade-in');
