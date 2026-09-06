@@ -139,42 +139,6 @@
             color: var(--ut-yellow);
         }
 
-        /* --- SETTINGS TOGGLE --- */
-        .settings-toggle {
-            margin-top: 0.5rem;
-            padding-top: 1.5rem;
-            border-top: 2px dashed var(--ut-gray);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.2rem;
-            color: var(--ut-gray);
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .settings-toggle:hover {
-            color: var(--ut-white);
-        }
-
-        .checkbox-box {
-            width: 24px;
-            height: 24px;
-            border: 3px solid var(--ut-gray);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'VT323', monospace;
-            font-size: 1.5rem;
-            color: var(--ut-yellow);
-            padding-bottom: 2px;
-            transition: border-color 0.2s;
-        }
-
-        .settings-toggle:hover .checkbox-box {
-            border-color: var(--ut-white);
-        }
-
         /* --- TOP FILTER MENU --- */
         .filter-menu {
             display: flex;
@@ -305,7 +269,6 @@
 
         .dialogue-container {
             position: fixed;
-            /* Placed 150% below viewport so it always fully hides regardless of box height */
             bottom: -150%; 
             left: 50%;
             transform: translateX(-50%);
@@ -324,7 +287,7 @@
         }
 
         .dialogue-container.show {
-            bottom: 30px; /* Snaps into view */
+            bottom: 30px; 
         }
 
         .dialogue-choices {
@@ -366,7 +329,6 @@
             .nav-link::before { display: none; }
             .manga-card { flex-direction: column; align-items: center; text-align: center; }
             .dialogue-container { font-size: 1.6rem; padding: 1.5rem; }
-            .settings-toggle { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -377,7 +339,7 @@
         
         <aside class="sidebar">
             <div class="ut-box brand-title">
-                THE KOI POND
+                KOKIKOI'S PROJECTS
             </div>
             <div class="ut-box nav-menu">
                 <button onclick="handleDonateClick()" class="nav-link">DONATE</button>
@@ -385,11 +347,6 @@
                 <a href="https://discord.gg/RTFJp9f8PP" target="_blank" class="nav-link">SPINYBACK DISCORD</a>
                 <a href="https://discord.gg/JAGM5VqzaG" target="_blank" class="nav-link">HNG DISCORD</a>
                 <a href="https://mangadot.net/group/the-koi-pond" target="_blank" class="nav-link">MANGADOT GROUP</a>
-                
-                <div class="settings-toggle" onclick="togglePopups()">
-                    <div class="checkbox-box" id="popup-checkbox">X</div>
-                    Show reading message
-                </div>
             </div>
         </aside>
 
@@ -397,7 +354,7 @@
             
             <div class="ut-box filter-menu">
                 <button class="filter-btn active" onclick="filterSeries('all', this)">ALL</button>
-                <button class="filter-btn" onclick="filterSeries('projects', this)">KOKIKOI'S PROJECTS</button>
+                <button class="filter-btn" onclick="filterSeries('pond', this)">THE KOI POND</button>
                 <button class="filter-btn" onclick="filterSeries('spinyback', this)">SPINYBACK</button>
                 <button class="filter-btn" onclick="filterSeries('hng', this)">HOKUTO NO GUN</button>
                 <button class="filter-btn" onclick="filterSeries('collaborative', this)">COLLABORATIVE</button>
@@ -405,7 +362,7 @@
 
             <div class="manga-grid" id="manga-grid">
                 
-                <article class="ut-box manga-card" data-groups="projects" onclick="readSeries(event, 'https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9HYWlhJTI2U2lrb3Jza3kuanNvbg/')">
+                <article class="ut-box manga-card" data-groups="pond" onclick="readSeries('https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9HYWlhJTI2U2lrb3Jza3kuanNvbg/')">
                     <img class="manga-cover" src="https://cdn.imgchest.com/files/a1d3519c2447.jpg" alt="Gaia & Sikorsky">
                     <div class="manga-info">
                         <div>
@@ -420,7 +377,7 @@
                     </div>
                 </article>
 
-                <article class="ut-box manga-card" data-groups="collaborative" onclick="readSeries(event, 'https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9SZXRzdUlzZWthaS5qc29u/')">
+                <article class="ut-box manga-card" data-groups="collaborative" onclick="readSeries('https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9SZXRzdUlzZWthaS5qc29u/')">
                     <img class="manga-cover" src="https://cdn.imgchest.com/files/8b0f171ed8ec.jpg" alt="Retsu Isekai">
                     <div class="manga-info">
                         <div>
@@ -437,7 +394,7 @@
                     </div>
                 </article>
 
-                <article class="ut-box manga-card" data-groups="spinyback" onclick="readSeries(event, 'https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9CYWtpR2FpZGVuU2hpbkNoaWhhcnUuanNvbg/')">
+                <article class="ut-box manga-card" data-groups="spinyback" onclick="readSeries('https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9CYWtpR2FpZGVuU2hpbkNoaWhhcnUuanNvbg/')">
                     <img class="manga-cover" src="https://cdn.imgchest.com/files/b6c97e0e3fd2.png" alt="Chiharu">
                     <div class="manga-info">
                         <div>
@@ -454,7 +411,7 @@
                     </div>
                 </article>
 
-                <article class="ut-box manga-card" data-groups="projects collaborative" onclick="readSeries(event, 'https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9TaWxlbnQlMjBIaWxsJTIwRi5qc29u/')">
+                <article class="ut-box manga-card" data-groups="pond collaborative" onclick="readSeries('https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9TaWxlbnQlMjBIaWxsJTIwRi5qc29u/')">
                     <img class="manga-cover" src="https://cdn.imgchest.com/files/ec06e5c50fc9.jpg" alt="Silent Hill f">
                     <div class="manga-info">
                         <div>
@@ -471,7 +428,7 @@
                     </div>
                 </article>
 
-                <article class="ut-box manga-card" data-groups="hng" onclick="readSeries(event, 'https://mangadex.org/title/83c13d88-8243-4dd2-80b1-dfb3cd5c4d70/zero-the-man-of-the-creation')">
+                <article class="ut-box manga-card" data-groups="hng" onclick="readSeries('https://mangadex.org/title/83c13d88-8243-4dd2-80b1-dfb3cd5c4d70/zero-the-man-of-the-creation')">
                     <img class="manga-cover" src="https://cdn.imgchest.com/files/0d340f0c99e8.jpg" alt="Zero">
                     <div class="manga-info">
                         <div>
@@ -488,7 +445,7 @@
                     </div>
                 </article>
 
-                <article class="ut-box manga-card" data-groups="spinyback" onclick="readSeries(event, 'https://mangadex.org/title/576668ad-5b33-421a-a916-5f0e0d04d715/suiken-japan')">
+                <article class="ut-box manga-card" data-groups="spinyback" onclick="readSeries('https://mangadex.org/title/576668ad-5b33-421a-a916-5f0e0d04d715/suiken-japan')">
                     <img class="manga-cover" src="https://cdn.imgchest.com/files/956d24fd2421.jpg" alt="Drunken Fist Japan">
                     <div class="manga-info">
                         <div>
@@ -505,7 +462,7 @@
                     </div>
                 </article>
 
-                <article class="ut-box manga-card" data-groups="projects" onclick="readSeries(event, 'https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9Ub2tpd2ElMjBLaXRhcmVyaS5qc29u/')">
+                <article class="ut-box manga-card" data-groups="pond" onclick="readSeries('https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9Ub2tpd2ElMjBLaXRhcmVyaS5qc29u/')">
                     <img class="manga-cover" src="https://cdn.imgchest.com/files/78fc1ac189f5.png" alt="Tokiwa">
                     <div class="manga-info">
                         <div>
@@ -533,41 +490,15 @@
 
     <script>
         // Global Variables
-        let showPopups = true;
         let typeWriter;
         let isTyping = false;
         let fullCurrentMessage = "";
         let onTypingFinishCallback = null;
 
-        // Initialize Settings & First Visit Check
-        document.addEventListener("DOMContentLoaded", () => {
-            const storedPreference = localStorage.getItem("showReadingMessage");
-            
-            if (storedPreference === null) {
-                // First time visitor: show prompt after a short delay
-                setTimeout(() => {
-                    promptFirstVisit();
-                }, 500);
-            } else {
-                showPopups = storedPreference === "true";
-                updateCheckboxUI();
-            }
-        });
-
         // Reset the page state whenever it's loaded 
         window.addEventListener('pageshow', function(event) {
             closeDialogue();
         });
-
-        function updateCheckboxUI() {
-            document.getElementById('popup-checkbox').innerText = showPopups ? 'X' : ' ';
-        }
-
-        function togglePopups() {
-            showPopups = !showPopups;
-            updateCheckboxUI();
-            localStorage.setItem("showReadingMessage", showPopups);
-        }
 
         // --- MASTER DIALOGUE SYSTEM ---
         
@@ -628,7 +559,6 @@
             overlay.classList.remove('active');
             if(typeWriter) clearInterval(typeWriter);
             
-            // Wipes the text out immediately after the box finishes sliding off screen (0.5s transition)
             setTimeout(() => {
                 if (!dialog.classList.contains('show')) {
                     document.getElementById('dialogue-text').innerHTML = "";
@@ -639,25 +569,6 @@
         }
 
         // --- SPECIFIC DIALOGUE EVENTS ---
-
-        // First Visit Prompt
-        function promptFirstVisit() {
-            startDialogue("* Hello! Would you like a small message to appear before reading a series? (You can change this later!)", () => {
-                const choices = document.getElementById('dialogue-choices');
-                choices.innerHTML = `
-                    <button class="choice-btn" onclick="setInitialPreference(true)">* Yes, that sounds nice.</button>
-                    <button class="choice-btn" onclick="setInitialPreference(false)">* No thanks, just take me to the manga.</button>
-                `;
-                choices.style.display = 'flex';
-            });
-        }
-
-        function setInitialPreference(wantsPopups) {
-            showPopups = wantsPopups;
-            updateCheckboxUI();
-            localStorage.setItem("showReadingMessage", showPopups);
-            closeDialogue();
-        }
 
         // Donate Click
         function handleDonateClick() {
@@ -676,21 +587,9 @@
             window.open('https://ko-fi.com/kokikoi20', '_blank');
         }
 
-        // Manga Reading Redirect
-        function readSeries(event, url) {
-            event.preventDefault(); 
-            
-            if (!showPopups) {
-                window.location.href = url;
-                return;
-            }
-            
-            startDialogue("* Have fun reading!", () => {
-                setTimeout(() => {
-                    closeDialogue();
-                    window.location.href = url;
-                }, 600);
-            });
+        // Direct Manga Reading Redirect
+        function readSeries(url) {
+            window.location.href = url;
         }
 
         // --- FILTER LOGIC ---
