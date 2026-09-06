@@ -4,635 +4,718 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Koi Pond.</title>
+    <title>KokiKoi's Projects.</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
+        /* Classic Pixel Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
         :root {
-            --bg-color: #0b0b0e;
-            --card-bg: rgba(30, 30, 38, 0.85);
-            --text-main: #e0e0e0;
-            --text-muted: #9a9aab;
-            --accent-purple: #7e57c2;
-            --accent-dark: #311b5e;
+            --ut-black: #000000;
+            --ut-white: #ffffff;
+            --ut-yellow: #ffff00;
+            --ut-blue: #00ffff;
+            --ut-red: #ff0000;
+            --ut-gray: #aaaaaa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* HIDE SCROLLBAR TO PREVENT PAGE JUMPING */
+        ::-webkit-scrollbar {
+            display: none; 
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            -ms-overflow-style: none;  
+            scrollbar-width: none;  
+            
+            background-color: var(--ut-black);
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
+                url('https://cdn.imgchest.com/files/082e8b4ad1c6.jpg');
+            background-size: cover;
+            background-position: center 30%; 
+            background-attachment: fixed;
+            image-rendering: pixelated; 
+            
+            color: var(--ut-white);
+            font-family: 'VT323', monospace;
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 4rem 2rem;
+            font-size: 1.5rem;
+            line-height: 1.2;
         }
 
-        #bg-canvas {
+        /* --- LAYOUT GRID --- */
+        .layout-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1250px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .sidebar {
+            width: 320px; 
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            flex-shrink: 0;
+            position: sticky;
+            top: 4rem;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* --- THE UT BOX --- */
+        .ut-box {
+            border: 5px solid var(--ut-white);
+            background-color: rgba(0, 0, 0, 0.85); 
+            padding: 1.5rem;
+            border-radius: 2px;
+        }
+
+        /* --- SIDEBAR ELEMENTS --- */
+        .brand-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2rem;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 2rem 1.5rem;
+        }
+
+        .nav-link {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.85rem;
+            color: var(--ut-white);
+            text-decoration: none;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            position: relative;
+            padding-left: 25px;
+            transition: color 0.1s;
+        }
+
+        .nav-link::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--ut-white);
+            opacity: 0;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+        }
+
+        .nav-link:hover {
+            color: var(--ut-yellow);
+        }
+
+        .nav-link:hover::before {
+            opacity: 1;
+            color: var(--ut-yellow);
+        }
+
+        /* --- SETTINGS TOGGLE --- */
+        .settings-toggle {
+            margin-top: 0.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px dashed var(--ut-gray);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.2rem;
+            color: var(--ut-gray);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .settings-toggle:hover {
+            color: var(--ut-white);
+        }
+
+        .checkbox-box {
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--ut-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            color: var(--ut-yellow);
+            padding-bottom: 2px;
+            transition: border-color 0.2s;
+        }
+
+        .settings-toggle:hover .checkbox-box {
+            border-color: var(--ut-white);
+        }
+
+        /* --- TOP FILTER MENU --- */
+        .filter-menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .filter-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.75rem;
+            color: var(--ut-gray);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+            text-transform: uppercase;
+        }
+
+        .filter-btn:hover {
+            color: var(--ut-white);
+        }
+
+        .filter-btn.active {
+            color: var(--ut-yellow);
+        }
+
+        /* --- SERIES LIST GRID --- */
+        .manga-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            transition: opacity 0.3s ease; 
+        }
+
+        .manga-card {
+            display: flex;
+            gap: 1.2rem;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+            position: relative;
+            cursor: pointer; 
+        }
+
+        .manga-card:hover {
+            border-color: var(--ut-yellow);
+            transform: translateY(-2px); 
+        }
+
+        .manga-cover {
+            width: 120px;
+            height: 180px;
+            object-fit: cover;
+            border: 3px solid var(--ut-white);
+            flex-shrink: 0;
+        }
+
+        .manga-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-top: 0.2rem;
+            flex-grow: 1;
+            pointer-events: none; 
+        }
+
+        .manga-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 0.8rem;
+        }
+
+        .manga-meta {
+            color: var(--ut-gray);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            line-height: 1.3;
+        }
+
+        .manga-meta strong {
+            color: var(--ut-white);
+        }
+
+        .manga-role {
+            color: var(--ut-yellow);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .manga-tags {
+            color: var(--ut-blue);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .read-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            color: var(--ut-white);
+            margin-top: auto;
+            transition: color 0.1s;
+        }
+
+        .read-btn::before {
+            content: '* ';
+        }
+
+        .manga-card:hover .read-btn {
+            color: var(--ut-yellow);
+        }
+
+        /* --- UT DIALOGUE BOX POP-UP --- */
+        .dialogue-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: -1;
+            z-index: 1999;
+            display: none;
+            cursor: pointer; 
         }
 
-        h1 {
-            color: #ffffff;
+        .dialogue-overlay.active {
+            display: block;
+        }
+
+        .dialogue-container {
+            position: fixed;
+            /* Placed 150% below viewport so it always fully hides regardless of box height */
+            bottom: -150%; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            min-height: 160px;
+            z-index: 2000;
+            transition: bottom 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 2.5rem;
             font-size: 2.2rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 2rem;
-            text-align: center;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-        }
-
-        /* --- LAYOUT STYLES --- */
-        .layout-wrapper {
-            display: flex;
-            width: 100%;
-            max-width: 1480px; 
-            gap: 3.5rem; 
-            align-items: flex-start;
-            justify-content: center; 
-        }
-
-        .main-content {
-            flex: 1;
-            max-width: 1080px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            width: 100%;
-            flex-grow: 1;
-        }
-
-        /* --- SIDEBAR & CUSTOM WIDGET --- */
-        .sidebar {
-            width: 320px; 
-            flex-shrink: 0;
-            position: sticky;
-            top: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .custom-widget-container {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Glassy Donate Button */
-        .kofi-toggle-btn {
-            width: 100%;
-            background-color: rgba(30, 30, 38, 0.65); 
-            backdrop-filter: blur(8px);
-            color: #ffffff;
-            padding: 16px 20px;
-            border: 1px solid rgba(255, 255, 255, 0.25); 
-            border-radius: 12px;
-            text-align: left;
-            font-weight: bold;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
-            z-index: 2;
-        }
-
-        .kofi-toggle-btn:hover {
-            background-color: rgba(126, 87, 194, 0.2); 
-            border-color: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 6px 20px rgba(126, 87, 194, 0.3);
-        }
-
-        .kofi-toggle-btn.open {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-            border-bottom-color: transparent;
-            background-color: rgba(126, 87, 194, 0.15);
-        }
-
-        .kofi-icon-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .toggle-arrow {
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .kofi-toggle-btn.open .toggle-arrow {
-            transform: rotate(180deg);
-        }
-
-        /* The expanding container for the actual Ko-fi panel */
-        .kofi-panel-wrapper {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, opacity 0.4s ease;
-            background-color: #f9f9f9; 
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 12px;
-            border: 1px solid transparent;
-            border-top: none;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .kofi-panel-wrapper.open {
-            max-height: 650px; 
-            opacity: 1;
-            border-color: rgba(255, 255, 255, 0.25);
-        }
-
-        #kofi-iframe {
-            width: 100%;
-            height: 650px;
-            border: none;
-            display: block;
-        }
-
-        /* --- WALL OF KOI --- */
-        .wall-of-koi {
-            padding: 1.2rem;
-        }
-
-        .wall-of-koi h2 {
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.8rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 8px;
-        }
-
-        .supporter-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            max-height: 500px;
-            overflow-y: auto;
-            padding-right: 8px;
-        }
-
-        .supporter-list::-webkit-scrollbar { width: 4px; }
-        .supporter-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
-
-        .supporter-list li {
-            padding: 1rem 0;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-        }
-        .supporter-list li:last-child { border-bottom: none; }
-
-        .supporter-name { 
-            font-weight: bold; 
-            color: #ffffff; 
-            display: block; 
-            font-size: 0.95rem;
-            margin-bottom: 3px;
-        }
-        
-        .supporter-msg { 
-            font-style: italic; 
-            color: #e0e0e0;
-            margin-bottom: 5px;
-            line-height: 1.4;
-        }
-
-        .supporter-action {
             line-height: 1.5;
+            background-color: var(--ut-black); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
-        /* The new white and purple glowing effect applied to the whole action line */
-        .highlight-amount {
-            color: #ffffff;
-            font-weight: bold;
-            text-shadow: 0 0 6px var(--accent-purple), 0 0 12px var(--accent-purple);
+        .dialogue-container.show {
+            bottom: 30px; /* Snaps into view */
         }
 
-        .supporter-reply {
-            margin-top: 8px;
-            padding-left: 10px;
-            border-left: 2px solid var(--accent-purple);
-            color: #bca0eb; 
-            font-size: 0.8rem;
-        }
-
-        @media (max-width: 1100px) {
-            .layout-wrapper { flex-direction: column; align-items: center; justify-content: center; }
-            .sidebar { width: 100%; max-width: 500px; position: static; margin-top: 2rem;}
-        }
-
-        /* --- EXISTING CARD STYLES --- */
-        .card {
-            background-color: var(--card-bg);
-            backdrop-filter: blur(4px);
-            border-radius: 12px;
-            padding: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-            color: var(--text-main);
-            display: flex;
+        .dialogue-choices {
+            display: none; 
             flex-direction: column;
-            opacity: 0;
-            transform: translateY(20px);
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-left: 1rem;
         }
 
-        .card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            background-color: rgba(35, 35, 45, 0.95);
+        .choice-btn {
+            background: none;
+            border: none;
+            color: var(--ut-gray);
+            font-family: 'VT323', monospace;
+            font-size: 1.8rem;
+            text-align: left;
+            cursor: pointer;
+            transition: color 0.1s;
         }
 
-        .cover-img {
-            width: 100%;
-            aspect-ratio: 2 / 3;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 0.9rem;
-            background-color: #1f1f26;
-            display: block;
+        .choice-btn:hover {
+            color: var(--ut-yellow);
         }
 
-        .card h2 { font-size: 1.05rem; margin: 0 0 0.6rem 0; color: #ffffff; text-align: center; line-height: 1.3; }
-        .meta { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.7rem; line-height: 1.4; text-align: left; }
-        .meta strong { color: #cfcfcf; }
-        .tags { display: flex; gap: 5px; margin-bottom: 1rem; flex-wrap: wrap; justify-content: center; }
-        .tag { background-color: rgba(255, 255, 255, 0.08); padding: 3px 7px; border-radius: 4px; font-size: 0.7rem; color: #c0c0c0; }
-        .card-actions { display: flex; flex-direction: column; gap: 0.5rem; margin-top: auto; }
-        .read-btn {
-            background: #2a2a35; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.15); padding: 9px 12px;
-            border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-            text-transform: uppercase; font-size: 0.78rem; letter-spacing: 0.5px; text-align: center; text-decoration: none; display: block;
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 1050px) {
+            .manga-grid { grid-template-columns: 1fr; }
+            .manga-cover { width: 140px; height: 210px; }
+            .manga-title { font-size: 1rem; }
         }
-        .read-btn:hover { background: #383846; border-color: rgba(255, 255, 255, 0.3); }
-        .read-btn-disabled { background: #1f1f26; color: var(--text-muted); border-color: rgba(255, 255, 255, 0.05); cursor: default; }
-        .fade-in { opacity: 1; transform: translateY(0); }
 
-        footer {
-            margin-top: 3rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1); width: 100%;
-            max-width: 500px; text-align: center; font-size: 0.9rem; color: var(--text-muted); align-self: center;
+        @media (max-width: 768px) {
+            body { padding: 2rem 1rem; }
+            .layout-wrapper { flex-direction: column; align-items: stretch; }
+            .sidebar { width: 100%; position: static; gap: 1rem; }
+            .nav-menu { flex-direction: row; flex-wrap: wrap; justify-content: center; padding: 1.5rem; gap: 2rem; }
+            .nav-link { padding-left: 0; text-align: center; }
+            .nav-link::before { display: none; }
+            .manga-card { flex-direction: column; align-items: center; text-align: center; }
+            .dialogue-container { font-size: 1.6rem; padding: 1.5rem; }
+            .settings-toggle { width: 100%; justify-content: center; }
         }
-        .footer-link { color: #ffffff; text-decoration: none; font-weight: bold; transition: 0.3s; margin-left: 5px; border-bottom: 1px solid transparent; }
-        .footer-link:hover { color: #cccccc; border-bottom: 1px solid #cccccc; }
     </style>
 </head>
 
 <body>
 
-    <canvas id="bg-canvas"></canvas>
-
     <div class="layout-wrapper">
         
-        <!-- LEFT SIDE: Main Manga Content -->
-        <div class="main-content">
-            <h1>The Koi Pond</h1>
-            
-            <div class="grid" id="manga-grid">
-                <!-- SILENT HILL f -->
-                <div class="card">
-                    <img class="cover-img" src="https://cdn.imgchest.com/files/ec06e5c50fc9.jpg" alt="Silent Hill f Cover">
-                    <h2>SILENT HILL f</h2>
-                    <div class="meta">
-                        <div><strong>Author:</strong> Konami Digital Entertainment, Ryukishi07</div>
-                        <div><strong>Artist:</strong> Ame Goukin</div>
-                    </div>
-                    <div class="tags"><span class="tag">Horror</span><span class="tag">Psychological</span><span class="tag">Drama</span></div>
-                    <div class="card-actions">
-                        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9TaWxlbnQlMjBIaWxsJTIwRi5qc29u/" class="read-btn">Read Series</a>
-                        <a href="https://mangadot.net/manga/24505" class="read-btn">Read on Mangadot.net</a>
-                    </div>
-                </div>
-                <!-- Gaia & Sikorsky -->
-                <div class="card">
-                    <img class="cover-img" src="https://cdn.imgchest.com/files/a1d3519c2447.jpg" alt="Gaia & Sikorsky Cover">
-                    <h2>Baki Side Story: Gaia &amp; Sikorsky - Sometimes Nomura—Two yet Three People Living Together</h2>
-                    <div class="meta">
-                        <div><strong>Author:</strong> Itagaki Keisuke</div>
-                        <div><strong>Artist:</strong> Toshiaki Hayashi</div>
-                    </div>
-                    <div class="tags"><span class="tag">Action</span><span class="tag">Comedy</span><span class="tag">Slice of Life</span></div>
-                    <div class="card-actions">
-                        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9HYWlhJTI2U2lrb3Jza3kuanNvbg/" class="read-btn">Read Series</a>
-                        <a href="https://mangadot.net/manga/16062" class="read-btn">Read on Mangadot.net</a>
-                    </div>
-                </div>
-
-                <!-- Chiharu -->
-                    <div class="card">
-                    <img class="cover-img" src="https://cdn.imgchest.com/files/b6c97e0e3fd2.png" alt="Chiharu Cover">
-                    <h2>Baki Gaiden: The REAL Chiharu</h2>
-                    <div class="meta">
-                        <div><strong>Author:</strong> Itagaki Keisuke</div>
-                        <div><strong>Artist:</strong> Omatsu Tomokazu</div>
-                    </div>
-                    <div class="tags"><span class="tag">Action</span><span class="tag">Mature</span><span class="tag">Delinquent/s</span></div>
-                    <div class="card-actions">
-                        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9CYWtpR2FpZGVuU2hpbkNoaWhhcnUuanNvbg/" class="read-btn">Read Series</a>
-                        <a href="https://mangadot.net/manga/36053" class="read-btn">Read on Mangadot.net</a>
-                    </div>
-                </div>
-                <!-- Tokiwa Kitareri -->
-                <div class="card">
-                    <img class="cover-img" src="https://cdn.imgchest.com/files/78fc1ac189f5.png" alt="Tokiwa Cover">
-                    <h2>Tokiwa Kitareri!!</h2>
-                    <div class="meta">
-                        <div><strong>Author:</strong> Syun Matsuena</div>
-                        <div><strong>Artist:</strong> Syun Matsuena</div>
-                    </div>
-                    <div class="tags"><span class="tag">Martial Arts</span><span class="tag">Comedy</span><span class="tag">Shounen</span></div>
-                    <div class="card-actions">
-                        <a href="https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9Ub2tpd2ElMjBLaXRhcmVyaS5qc29u/" class="read-btn">Read Series</a>
-                        <a href="https://mangadot.net/manga/7107" class="read-btn">Read on Mangadot.net</a>
-                    </div>
-                </div>
-                <!-- Baki Gaiden One-Shots -->
-                <div class="card">
-                    <img id="baki-oneshots-cover" class="cover-img" src="https://cdn.imgchest.com/files/placeholder.jpg" alt="Baki Gaiden One-Shots">
-                    <h2>Baki Gaiden: One-Shots</h2>
-                    <div class="meta">
-                        <div><strong>Author:</strong> Itagaki Keisuke</div>
-                        <div><strong>Artist:</strong> Various</div>
-                    </div>
-                    <div class="tags"><span class="tag">Action</span><span class="tag">Anthology</span><span class="tag">Martial Arts</span></div>
-                    <div class="card-actions"><span class="read-btn read-btn-disabled">Upcoming Series</span></div>
-                </div>
-                <!-- Kizuzura -->
-                <div class="card">
-                    <img class="cover-img" src="https://cdn.imgchest.com/files/4a4b1e6ea5be.jpg" alt="Kizuzura Cover">
-                    <h2>Baki Gaiden -<br>Kizuzura</h2>
-                    <div class="meta">
-                        <div><strong>Author:</strong> Itagaki Keisuke</div>
-                        <div><strong>Artist:</strong> Yamauchi Yukinao</div>
-                    </div>
-                    <div class="tags"><span class="tag">Action</span><span class="tag">School Life</span><span class="tag">Comedy</span></div>
-                    <div class="card-actions"><span class="read-btn read-btn-disabled">Upcoming Rerelease</span></div>
-                </div>
-        </div>
-            <footer>
-                Join my community: <a href="https://discord.gg/zbCFAFGMMq" target="_blank" class="footer-link">Discord</a>
-            </footer>
-        </div>
-
-        <!-- RIGHT SIDE: Sidebar -->
         <aside class="sidebar">
-            <!-- Custom Expanding Glassy Ko-fi Widget -->
-            <div class="custom-widget-container">
-                <button class="kofi-toggle-btn" id="kofi-toggle" onclick="toggleWidget()">
-                    <div class="kofi-icon-group">
-                        <span>☕</span> Support the Pond
-                    </div>
-                    <span class="toggle-arrow">▼</span>
-                </button>
-                
-                <!-- The panel that slides out -->
-                <div class="kofi-panel-wrapper" id="kofi-panel">
-                    <iframe id="kofi-iframe" src="https://ko-fi.com/kokikoi20/?hidefeed=true&widget=true&embed=true&preview=true" title="kokikoi20"></iframe>
-                </div>
+            <div class="ut-box brand-title">
+                KOKIKOI'S PROJECTS
             </div>
-
-            <!-- The Wall of Koi Container -->
-            <div class="card wall-of-koi" style="opacity: 1; transform: none;"> 
-                <h2>Wall of Koi</h2>
-                <div class="meta" style="margin-bottom: 15px;">Recent supporters!</div>
+            <div class="ut-box nav-menu">
+                <button onclick="handleDonateClick()" class="nav-link">DONATE</button>
+                <a href="https://discord.gg/KD3aKjndm5" target="_blank" class="nav-link">MY DISCORD</a>
+                <a href="https://discord.gg/RTFJp9f8PP" target="_blank" class="nav-link">SPINYBACK DISCORD</a>
+                <a href="https://discord.gg/JAGM5VqzaG" target="_blank" class="nav-link">HNG DISCORD</a>
+                <a href="https://mangadot.net/group/the-koi-pond" target="_blank" class="nav-link">MANGADOT GROUP</a>
                 
-                <ul class="supporter-list" id="dynamic-donations"></ul>
+                <div class="settings-toggle" onclick="togglePopups()">
+                    <div class="checkbox-box" id="popup-checkbox">X</div>
+                    Show reading message
+                </div>
             </div>
         </aside>
 
+        <main class="main-content">
+            
+            <div class="ut-box filter-menu">
+                <button class="filter-btn active" onclick="filterSeries('all', this)">ALL</button>
+                <button class="filter-btn" onclick="filterSeries('projects', this)">KOKIKOI'S PROJECTS</button>
+                <button class="filter-btn" onclick="filterSeries('spinyback', this)">SPINYBACK</button>
+                <button class="filter-btn" onclick="filterSeries('hng', this)">HOKUTO NO GUN</button>
+                <button class="filter-btn" onclick="filterSeries('collaborative', this)">COLLABORATIVE</button>
+            </div>
+
+            <div class="manga-grid" id="manga-grid">
+                
+                <article class="ut-box manga-card" data-groups="projects" onclick="readSeries(event, 'https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9HYWlhJTI2U2lrb3Jza3kuanNvbg/')">
+                    <img class="manga-cover" src="https://cdn.imgchest.com/files/a1d3519c2447.jpg" alt="Gaia & Sikorsky">
+                    <div class="manga-info">
+                        <div>
+                            <h2 class="manga-title">Baki Side Story: Gaia & Sikorsky</h2>
+                            <div class="manga-meta">
+                                AUTHOR: <strong>Itagaki Keisuke</strong><br>
+                                ARTIST: <strong>Toshiaki Hayashi</strong>
+                            </div>
+                            <div class="manga-tags">"Action" "Comedy" "Slice of Life"</div>
+                        </div>
+                        <div class="read-btn">Read Series</div>
+                    </div>
+                </article>
+
+                <article class="ut-box manga-card" data-groups="collaborative" onclick="readSeries(event, 'https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9SZXRzdUlzZWthaS5qc29u/')">
+                    <img class="manga-cover" src="https://cdn.imgchest.com/files/8b0f171ed8ec.jpg" alt="Retsu Isekai">
+                    <div class="manga-info">
+                        <div>
+                            <h2 class="manga-title">Baki Gaiden: Retsu Isekai</h2>
+                            <div class="manga-meta">
+                                AUTHOR: <strong>Ihara Daisuke, Itagaki K.</strong><br>
+                                ARTIST: <strong>Murai Eiji</strong><br>
+                                GROUP: <strong>Project Ryoko (Collab)</strong>
+                            </div>
+                            <div class="manga-role">MY ROLE: Translator</div>
+                            <div class="manga-tags">"Action" "Isekai" "Martial Arts"</div>
+                        </div>
+                        <div class="read-btn">Read Series</div>
+                    </div>
+                </article>
+
+                <article class="ut-box manga-card" data-groups="spinyback" onclick="readSeries(event, 'https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9CYWtpR2FpZGVuU2hpbkNoaWhhcnUuanNvbg/')">
+                    <img class="manga-cover" src="https://cdn.imgchest.com/files/b6c97e0e3fd2.png" alt="Chiharu">
+                    <div class="manga-info">
+                        <div>
+                            <h2 class="manga-title">Baki Gaiden: The REAL Chiharu</h2>
+                            <div class="manga-meta">
+                                AUTHOR: <strong>Itagaki Keisuke</strong><br>
+                                ARTIST: <strong>Omatsu Tomokazu</strong><br>
+                                GROUP: <strong>Spinyback (Collab)</strong>
+                            </div>
+                            <div class="manga-role">MY ROLE: Translator</div>
+                            <div class="manga-tags">"Action" "Mature" "Delinquents"</div>
+                        </div>
+                        <div class="read-btn">Read Series</div>
+                    </div>
+                </article>
+
+                <article class="ut-box manga-card" data-groups="projects collaborative" onclick="readSeries(event, 'https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9TaWxlbnQlMjBIaWxsJTIwRi5qc29u/')">
+                    <img class="manga-cover" src="https://cdn.imgchest.com/files/ec06e5c50fc9.jpg" alt="Silent Hill f">
+                    <div class="manga-info">
+                        <div>
+                            <h2 class="manga-title">SILENT HILL f</h2>
+                            <div class="manga-meta">
+                                AUTHOR: <strong>Konami, Ryukishi07</strong><br>
+                                ARTIST: <strong>Ame Goukin</strong><br>
+                                GROUP: <strong>Creeg Scans (Collab)</strong>
+                            </div>
+                            <div class="manga-role">MY ROLE: Translator & Typesetter</div>
+                            <div class="manga-tags">"Horror" "Psychological" "Drama"</div>
+                        </div>
+                        <div class="read-btn">Read Series</div>
+                    </div>
+                </article>
+
+                <article class="ut-box manga-card" data-groups="hng" onclick="readSeries(event, 'https://mangadex.org/title/83c13d88-8243-4dd2-80b1-dfb3cd5c4d70/zero-the-man-of-the-creation')">
+                    <img class="manga-cover" src="https://cdn.imgchest.com/files/0d340f0c99e8.jpg" alt="Zero">
+                    <div class="manga-info">
+                        <div>
+                            <h2 class="manga-title">Zero: The Man of the Creation</h2>
+                            <div class="manga-meta">
+                                AUTHOR: <strong>Sae Oohashi</strong><br>
+                                ARTIST: <strong>Shinji Makari</strong><br>
+                                GROUP: <strong>Hokuto no Gun</strong>
+                            </div>
+                            <div class="manga-role">MY ROLE: Editor</div>
+                            <div class="manga-tags">"Action" "Drama" "Historical"</div>
+                        </div>
+                        <div class="read-btn">Read Series</div>
+                    </div>
+                </article>
+
+                <article class="ut-box manga-card" data-groups="spinyback" onclick="readSeries(event, 'https://mangadex.org/title/576668ad-5b33-421a-a916-5f0e0d04d715/suiken-japan')">
+                    <img class="manga-cover" src="https://cdn.imgchest.com/files/956d24fd2421.jpg" alt="Drunken Fist Japan">
+                    <div class="manga-info">
+                        <div>
+                            <h2 class="manga-title">Drunken Fist Japan</h2>
+                            <div class="manga-meta">
+                                AUTHOR: <strong>Yamamoto Hideo</strong><br>
+                                ARTIST: <strong>Yamamoto Hideo</strong><br>
+                                GROUP: <strong>Spinyback</strong>
+                            </div>
+                            <div class="manga-role">MY ROLE: Minor Redraws</div>
+                            <div class="manga-tags">"Drama" "Psychological" "Seinen"</div>
+                        </div>
+                        <div class="read-btn">Read Series</div>
+                    </div>
+                </article>
+
+                <article class="ut-box manga-card" data-groups="projects" onclick="readSeries(event, 'https://cubari.moe/read/gist/cmF3L0tva2lLb2kvS29pUG9uZE1hbmdhL3JlZnMvaGVhZHMvbWFpbi9Ub2tpd2ElMjBLaXRhcmVyaS5qc29u/')">
+                    <img class="manga-cover" src="https://cdn.imgchest.com/files/78fc1ac189f5.png" alt="Tokiwa">
+                    <div class="manga-info">
+                        <div>
+                            <h2 class="manga-title">Tokiwa Kitareri!!</h2>
+                            <div class="manga-meta">
+                                AUTHOR: <strong>Syun Matsuena</strong><br>
+                                ARTIST: <strong>Syun Matsuena</strong>
+                            </div>
+                            <div class="manga-tags">"Martial Arts" "Comedy" "Shounen"</div>
+                        </div>
+                        <div class="read-btn">Read Series</div>
+                    </div>
+                </article>
+
+            </div>
+        </main>
+    </div>
+
+    <div id="dialogue-overlay" class="dialogue-overlay" onclick="skipTyping()"></div>
+
+    <div id="ut-dialogue" class="ut-box dialogue-container">
+        <span id="dialogue-text"></span>
+        <div id="dialogue-choices" class="dialogue-choices"></div>
     </div>
 
     <script>
-        // =========================================================
-        // ✨ WIDGET TOGGLE LOGIC ✨
-        // =========================================================
-        function toggleWidget() {
-            const panel = document.getElementById('kofi-panel');
-            const btn = document.getElementById('kofi-toggle');
-            
-            if (panel.classList.contains('open')) {
-                panel.classList.remove('open');
-                btn.classList.remove('open');
-            } else {
-                panel.classList.add('open');
-                btn.classList.add('open');
-            }
-        }
+        // Global Variables
+        let showPopups = true;
+        let typeWriter;
+        let isTyping = false;
+        let fullCurrentMessage = "";
+        let onTypingFinishCallback = null;
 
-
-const recentDonations =[
-
-    
-{
-        name: "Andol",
-        amount: "$40.00",
-        message: "Thanks so much for your translations of OPM. And especially continuing them and trying to get together a team to take over. Personally I still enjoy it a lot and I hope the doomsayers are wrong.",
-        reply: "Thanks a lot for the support! <3"
-    },
-{
-        name: "Alan",
-        amount: "$40.00",
-        message: "Tired of seeing my old message so here's another donation to replace it! GL with finding TS/translators!",
-        reply: "Oh my lord brother! You didn't have to :sob: THANKS A TON!"
-    },
-    {
-        name: "Whitecraine",
-        amount: "$10.00",
-        message: "Thank you so much for helping make OPM more accessible! It continues to be one of my favorites. Please take as much time as you need, it is worth the wait!",
-        reply: "<3 Thanks a lot!",
-    },
-    {
-        name: "Supporter/Anonymous",
-        amount: "$100.00",
-        message: "",
-        reply: "I am speechless..."
-    },
-    {
-        name: "Landon",
-        amount: "$10.00",
-        message: "Thanks for the OPM translations, go take a break you earned it",
-        reply: "Thank uuu! <3"
-    },
-  
-    {
-        name: "Jeycii",
-        amount: "$11.00",
-        message: "OPM is one of the few mangas left I keep reading and enjoying. It would be a HUGE shame to leave it's translations to someone less skilled than you. So please take my appreciation dear Sir!",
-        reply: "Thank you sm! All support is greatly appreciated!"
-    },
-    {
-        name: "Supporter",
-        amount: "$20.00",
-        message: "thank you",
-        reply: "<3 thank you too!"
-    },
-    {
-        name: "Minedor",
-        amount: "$15.00",
-        message: "Keep at it! Great work on Gaia & Sikorsky, excited for future chapters.",
-        reply: "HUGE LOVE! Thank you so very much! Will do the best of my abilities!"
-    },
-    {
-        name: "Jonty",
-        amount: "$40.00",
-        message: "I appreciate the OPM translations. :)",
-        reply: "Holy moly. Thank you SO MUCH BROTHER!"
-    },
-    {
-        name: "Jose",
-        amount: "$10.00",
-        message: "They're too consistent 🙌",
-        reply: "THANK YOU SM!"
-    },
-    {
-        name: "Mangadot",
-        amount: "$20.00",
-        message: "Donation from Mangadot.net For the awesome OPM <3",
-        reply: "HUGE love Thank sm!(Also thank you for teaching me the ways of crypto)"
-    },
-    {
-        name: "Kana K",
-        amount: "$6.00",
-        message: "I just found u today and thank you so for your effort on the Baki Gaiden Gaia and Sikorsky manga 🙇🏻‍♀️💕",
-        reply: "Thank you sm <3, Happy to provide Gaia & Sikorsky :D!"
-    },
-    {
-        name: "Anonymous",
-        amount: "$3.00",
-        message: "Thanks for the scans",
-        reply: "Omg thank you sm <3 Happy to help!"
-    },
-    {
-        name: "Jose",
-        amount: "$10.00",
-        message: "Preciate the kenichi, mah boi",
-        reply: "OMG THANK YOU!! <3"
-    },
-    {
-        name: "Jokuman357",
-        amount: "$20.00",
-        message: "I wait upon you on the top of the Dragon Gate.",
-        reply: "Actually shocked holy crap thank you <3"
-    }
-
-];
-
-        const donationContainer = document.getElementById('dynamic-donations');
-        recentDonations.forEach(donor => {
-            let li = document.createElement('li');
-            
-            // Format the message if it exists
-            let msgHTML = donor.message ? `<div class="supporter-msg">"${donor.message}"</div>` : '';
-            
-            // Format the reply if it exists
-            let replyHTML = donor.reply ? `<div class="supporter-reply">↳ <strong>Reply:</strong> ${donor.reply}</div>` : '';
-
-            // Apply the glowing highlight-amount class to the entire action div
-            li.innerHTML = `
-                <span class="supporter-name">${donor.name}</span>
-                ${msgHTML}
-                <div class="supporter-action highlight-amount">
-                    Funded ${donor.monstersFunded} Monsters! - ${donor.amount}
-                </div>
-                ${replyHTML}
-            `;
-            
-            donationContainer.appendChild(li);
-        });
-        // =========================================================
-
-        const bakiCovers = [
-            "https://cdn.imgchest.com/files/82b863c637f2.jpg",
-            "https://cdn.imgchest.com/files/9936d9292fe3.jpg",
-            "https://cdn.imgchest.com/files/7a9ad50c0e20.jpg",
-            "https://cdn.imgchest.com/files/1d56d8df18c6.jpg"
-        ];
-
-        const bakiTargetImage = document.getElementById('baki-oneshots-cover');
-        if (bakiTargetImage) {
-            const randomBakiIndex = Math.floor(Math.random() * bakiCovers.length);
-            bakiTargetImage.src = bakiCovers[randomBakiIndex];
-        }
-
+        // Initialize Settings & First Visit Check
         document.addEventListener("DOMContentLoaded", () => {
-            const cards = document.querySelectorAll('.card:not([style*="opacity: 1"])');
-            cards.forEach((card, index) => {
+            const storedPreference = localStorage.getItem("showReadingMessage");
+            
+            if (storedPreference === null) {
+                // First time visitor: show prompt after a short delay
                 setTimeout(() => {
-                    card.classList.add('fade-in');
-                }, index * 100);
-            });
+                    promptFirstVisit();
+                }, 500);
+            } else {
+                showPopups = storedPreference === "true";
+                updateCheckboxUI();
+            }
         });
 
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height, particles;
+        // Reset the page state whenever it's loaded 
+        window.addEventListener('pageshow', function(event) {
+            closeDialogue();
+        });
 
-        function init() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            particles = [];
-            for (let i = 0; i < 40; i++) {
-                particles.push(new Particle());
+        function updateCheckboxUI() {
+            document.getElementById('popup-checkbox').innerText = showPopups ? 'X' : ' ';
+        }
+
+        function togglePopups() {
+            showPopups = !showPopups;
+            updateCheckboxUI();
+            localStorage.setItem("showReadingMessage", showPopups);
+        }
+
+        // --- MASTER DIALOGUE SYSTEM ---
+        
+        function startDialogue(message, onFinishTyping) {
+            if(typeWriter) clearInterval(typeWriter);
+            
+            const dialog = document.getElementById('ut-dialogue');
+            const overlay = document.getElementById('dialogue-overlay');
+            const textElement = document.getElementById('dialogue-text');
+            const choices = document.getElementById('dialogue-choices');
+            
+            dialog.classList.add('show');
+            overlay.classList.add('active'); 
+            choices.style.display = 'none'; 
+            choices.innerHTML = ""; 
+            
+            fullCurrentMessage = message;
+            textElement.innerHTML = "";
+            isTyping = true;
+            onTypingFinishCallback = onFinishTyping;
+            
+            let i = 0;
+            typeWriter = setInterval(() => {
+                if (i < message.length) {
+                    textElement.innerHTML += message.charAt(i);
+                    i++;
+                } else {
+                    finishTyping();
+                }
+            }, 40);
+        }
+
+        // Triggered when text finishes naturally OR when user clicks the screen
+        function finishTyping() {
+            if (!isTyping) return; 
+            
+            clearInterval(typeWriter);
+            isTyping = false;
+            document.getElementById('dialogue-text').innerHTML = fullCurrentMessage;
+            
+            if(onTypingFinishCallback) {
+                onTypingFinishCallback();
             }
         }
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.size = Math.random() * 1.5 + 0.5;
-                this.speedX = Math.random() * 0.6 - 0.3;
-                this.speedY = Math.random() * 0.6 - 0.3;
-                this.color = 'rgba(255, 255, 255, 0.15)';
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > width) this.x = 0;
-                else if (this.x < 0) this.x = width;
-                if (this.y > height) this.y = 0;
-                else if (this.y < 0) this.y = height;
-            }
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
+        // Captures clicks on the invisible overlay to skip text
+        function skipTyping() {
+            if (isTyping) {
+                finishTyping();
             }
         }
 
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
+        // Closes dialogue entirely and clears out data cleanly
+        function closeDialogue() {
+            const dialog = document.getElementById('ut-dialogue');
+            const overlay = document.getElementById('dialogue-overlay');
+            dialog.classList.remove('show');
+            overlay.classList.remove('active');
+            if(typeWriter) clearInterval(typeWriter);
+            
+            // Wipes the text out immediately after the box finishes sliding off screen (0.5s transition)
+            setTimeout(() => {
+                if (!dialog.classList.contains('show')) {
+                    document.getElementById('dialogue-text').innerHTML = "";
+                    document.getElementById('dialogue-choices').innerHTML = "";
+                    document.getElementById('dialogue-choices').style.display = 'none';
+                }
+            }, 500); 
+        }
+
+        // --- SPECIFIC DIALOGUE EVENTS ---
+
+        // First Visit Prompt
+        function promptFirstVisit() {
+            startDialogue("* Hello! Would you like a small message to appear before reading a series? (You can change this later!)", () => {
+                const choices = document.getElementById('dialogue-choices');
+                choices.innerHTML = `
+                    <button class="choice-btn" onclick="setInitialPreference(true)">* Yes, that sounds nice.</button>
+                    <button class="choice-btn" onclick="setInitialPreference(false)">* No thanks, just take me to the manga.</button>
+                `;
+                choices.style.display = 'flex';
             });
-            requestAnimationFrame(animate);
         }
 
-        window.addEventListener('resize', init);
-        init();
-        animate();
+        function setInitialPreference(wantsPopups) {
+            showPopups = wantsPopups;
+            updateCheckboxUI();
+            localStorage.setItem("showReadingMessage", showPopups);
+            closeDialogue();
+        }
+
+        // Donate Click
+        function handleDonateClick() {
+            startDialogue("* Wait! If you can donate to a charity or a local animal shelter, please do that instead.", () => {
+                const choices = document.getElementById('dialogue-choices');
+                choices.innerHTML = `
+                    <button class="choice-btn" onclick="proceedToDonate()">* I want to donate to you.</button>
+                    <button class="choice-btn" onclick="closeDialogue()">* Alright, thanks for reminding me.</button>
+                `;
+                choices.style.display = 'flex';
+            });
+        }
+
+        function proceedToDonate() {
+            closeDialogue();
+            window.open('https://ko-fi.com/kokikoi20', '_blank');
+        }
+
+        // Manga Reading Redirect
+        function readSeries(event, url) {
+            event.preventDefault(); 
+            
+            if (!showPopups) {
+                window.location.href = url;
+                return;
+            }
+            
+            startDialogue("* Have fun reading!", () => {
+                setTimeout(() => {
+                    closeDialogue();
+                    window.location.href = url;
+                }, 600);
+            });
+        }
+
+        // --- FILTER LOGIC ---
+        function filterSeries(group, btnElement) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            const grid = document.getElementById('manga-grid');
+            const cards = document.querySelectorAll('.manga-card');
+
+            grid.style.opacity = '0';
+
+            setTimeout(() => {
+                cards.forEach(card => {
+                    const cardGroups = card.getAttribute('data-groups').split(' ');
+                    if (group === 'all' || cardGroups.includes(group)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                grid.style.opacity = '1';
+            }, 300); 
+        }
     </script>
 </body>
 
